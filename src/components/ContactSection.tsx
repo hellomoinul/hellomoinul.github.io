@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, Linkedin, Github, Send, Facebook, Instagram, Youtube } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 const XIcon = ({ size = 24, className = "" }: { size?: number; className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M4 4l6.5 8L4 20h2l5.5-6.8L16 20h4l-6.8-8.5L19.5 4H18l-5 6.2L9 4H4z" />
   </svg>
 );
+
+import { useToast } from "@/hooks/use-toast";
 
 const socialLinks = [
   { label: "Facebook", href: "https://facebook.com/hellomoinul", icon: Facebook },
@@ -37,19 +38,16 @@ const ContactSection = () => {
       }, 600);
     };
     window.addEventListener("highlight-all-contacts", onAllContacts);
-    return () => window.removeEventListener("highlight-all-contacts", onAllContacts);
+    return () => {
+      window.removeEventListener("highlight-all-contacts", onAllContacts);
+    };
   }, []);
 
-  // --- Netlify AJAX Submission Logic ---
-  const encode = (data: any) => {
-    return Object.keys(data)
-      .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  // --- UNIVERSAL SUBMIT LOGIC (Target 1 & 2) ---
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validation
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
       toast({ title: "Please fill in all fields", variant: "destructive" });
       return;
@@ -57,20 +55,32 @@ const ContactSection = () => {
 
     setSending(true);
 
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: encode({ "form-name": "contact", ...form }),
-    })
-      .then(() => {
-        toast({ title: "Message sent!", description: "Thank you for reaching out. I'll get back to you soon." });
-        setForm({ name: "", email: "", message: "" }); // Form clear kora
-      })
-      .catch((error) => {
-        toast({ title: "Error", description: "Something went wrong. Please try again later.", variant: "destructive" });
-        console.error(error);
-      })
-      .finally(() => setSending(false));
+    try {
+      // Formspree API call for Cross-Platform compatibility
+      const response = await fetch("https://formspree.io/f/xkoqegbz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        toast({ 
+          title: "Message Sent!", 
+          description: "Thank you, Scar. I'll get back to you soon." 
+        });
+        setForm({ name: "", email: "", message: "" }); // Reset form
+      } else {
+        throw new Error("Failed to send");
+      }
+    } catch (error) {
+      toast({ 
+        title: "Submission Error", 
+        description: "Something went wrong. Please try again later.", 
+        variant: "destructive" 
+      });
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -88,40 +98,37 @@ const ContactSection = () => {
           <div className="w-16 h-px bg-primary/50 mx-auto" />
           <p className="text-muted-foreground">Available for Technical Consulting and Internships.</p>
 
+          {/* --- MODIFIED FORM: Formspree Implementation --- */}
           <form 
-            name="contact" 
             onSubmit={handleSubmit} 
             className="space-y-4 text-left"
-            data-netlify="true"
           >
-            <input type="hidden" name="form-name" value="contact" />
-            
             <div className="grid sm:grid-cols-2 gap-4">
               <input
                 name="name"
                 type="text"
                 placeholder="Your Name"
-                required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
                 className="w-full px-4 py-3 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
               />
               <input
                 name="email"
                 type="email"
                 placeholder="Your Email"
-                required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
                 className="w-full px-4 py-3 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all"
               />
             </div>
             <textarea
               name="message"
               placeholder="Your Message"
-              required
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
+              required
               rows={5}
               className="w-full px-4 py-3 rounded-lg bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-all resize-none"
             />
@@ -144,8 +151,9 @@ const ContactSection = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-12 h-12 rounded-lg glass-card flex items-center justify-center text-muted-foreground hover:text-primary transition-all duration-300 ${
-                    highlightSocials ? "text-primary scale-110" : ""
+                  aria-label={label}
+                  className={`w-12 h-12 rounded-lg glass-card flex items-center justify-center text-muted-foreground hover:text-primary hover:glow-cyan transition-all duration-300 ${
+                    highlightSocials ? "text-primary glow-cyan scale-110" : ""
                   }`}
                 >
                   <Icon size={20} />
@@ -156,7 +164,9 @@ const ContactSection = () => {
             <a
               href="mailto:akash.moinulhasan@gmail.com"
               className={`glass-button px-6 py-3 rounded-lg font-mono text-sm border-b-2 transition-all duration-300 inline-flex items-center gap-2 ${
-                highlightEmail ? "text-primary border-primary scale-110" : "hover:text-primary border-primary/50"
+                highlightEmail
+                  ? "text-primary border-primary glow-cyan scale-110"
+                  : "hover:text-primary border-primary/50 hover:border-primary"
               }`}
             >
               <Mail size={16} />
@@ -165,6 +175,7 @@ const ContactSection = () => {
           </div>
         </motion.div>
 
+        {/* Footer */}
         <div className="mt-20 pt-8 border-t border-border/30 text-center">
           <p className="font-mono text-xs text-muted-foreground">
             © {new Date().getFullYear()} Md. Moinul Hasan Akash — Built with precision.
