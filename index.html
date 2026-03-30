@@ -69,6 +69,14 @@ if (window.location.hostname === "moinulhasan.github.io") {
   window.location.href = "https://moinulhasan.pro.bd";
 }
 </script>
+    <script>
+  (function () {
+    var host = window.location.hostname;
+    if (host === "moinulhasan.github.io") {
+      window.location.replace("https://moinulhasan.pro.bd" + window.location.pathname + window.location.search + window.location.hash);
+    }
+  })();
+</script>
     <meta name="google-site-verification" content="9XBdkuuh0u5OfRFKEt6buFuW_-EwCtkMhiQj_KRilPc" />
   </head>
 
