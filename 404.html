@@ -7,5 +7,13 @@
       sessionStorage.redirect = location.pathname;
       location.replace("/moinul-portfolio4/");
     </script>
+    <script>
+  (function () {
+    var host = window.location.hostname;
+    if (host === "moinulhasan.github.io") {
+      window.location.replace("https://moinulhasan.pro.bd" + window.location.pathname + window.location.search + window.location.hash);
+    }
+  })();
+</script>
   </head>
 </html>
