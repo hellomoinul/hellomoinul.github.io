@@ -16,7 +16,7 @@ const socialLinks = [
   { label: "YouTube", href: "https://www.youtube.com/hellomoinul", icon: Youtube },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/hellomoinul", icon: Linkedin },
   { label: "GitHub", href: "https://github.com/hellomoinul", icon: Github },
-  { label: "X", href: "https://x.com/mdmoinul__hasan", icon: XIcon },
+  { label: "X", href: "https://x.com/hellomoinul", icon: XIcon },
 ] as const;
 
 const ContactSection = () => {
