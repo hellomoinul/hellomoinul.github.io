@@ -14,8 +14,8 @@ const socialLinks = [
   { label: "Facebook", href: "https://facebook.com/hellomoinul", icon: Facebook },
   { label: "Instagram", href: "https://instagram.com/hellomoinul", icon: Instagram },
   { label: "YouTube", href: "https://www.youtube.com/hellomoinul", icon: Youtube },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/md-moinul-hasan-akash-158168226", icon: Linkedin },
-  { label: "GitHub", href: "https://github.com/MDMoinulHasan", icon: Github },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/hellomoinul", icon: Linkedin },
+  { label: "GitHub", href: "https://github.com/hellomoinul", icon: Github },
   { label: "X", href: "https://x.com/mdmoinul__hasan", icon: XIcon },
 ] as const;
 
