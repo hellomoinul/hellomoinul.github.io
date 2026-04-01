@@ -169,12 +169,13 @@ const HeroSection = () => {
             <div className="relative">
               <div className="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden glass-card p-1">
                 <img
-                  src={profileImg}
-                  alt="Portrait of Md. Moinul Hasan Akash"
-                  className="w-full h-full rounded-full object-cover object-top"
-                  loading="eager"
-                  fetchPriority="high"
-                />
+  src={profileImg}
+  {/* এখানে আপনার কিওয়ার্ডগুলো যোগ করা হয়েছে */}
+  alt="Md. Moinul Hasan Akash - NITER CSE Student and Computer Engineer" 
+  className="w-full h-full rounded-full object-cover object-top"
+  loading="eager"
+  fetchPriority="high"
+/>
               </div>
               <div className="absolute inset-[-16px] rounded-full border border-primary/20 animate-[spin_20s_linear_infinite]">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary" />
