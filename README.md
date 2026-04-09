@@ -4,8 +4,8 @@ Md. Moinul Hasan Akash is a Computer Science and Engineering (CSE) student at NI
 This GitHub profile represents the work, projects, and technical journey of Md. Moinul Hasan Akash.
 
 🌐 Portfolio: https://moinulhasan.pro.bd  
-💼 LinkedIn: https://www.linkedin.com/in/md-moinul-hasan-akash-158168226  
-💻 GitHub: https://github.com/MDMoinulHasan  
+💼 LinkedIn: https://www.linkedin.com/in/hellomoinul  
+💻 GitHub: https://github.com/hellomoinul  
 
 ---
 
@@ -50,8 +50,8 @@ This repository represents the personal portfolio of Md. Moinul Hasan Akash and 
 ## 🔗 Connect with Md. Moinul Hasan Akash
 
 - Portfolio: https://moinulhasan.pro.bd  
-- LinkedIn: https://www.linkedin.com/in/md-moinul-hasan-akash-158168226  
-- GitHub: https://github.com/MDMoinulHasan  
+- LinkedIn: https://www.linkedin.com/in/hellomoinul  
+- GitHub: https://github.com/hellomoinul  
 
 ---
 
