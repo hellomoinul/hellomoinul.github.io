@@ -1,11 +1,9 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
-// 📍 Importing your data to make it dynamic
-// Note: Ensure the paths correctly point to where your projects and skills are defined
+// 📍 Importing data from your sections
 import { projects } from "./ProjectsSection"; 
-// যদি স্কিলগুলো অন্য ফাইলে থাকে তবে সেখান থেকে ইমপোর্ট করবেন, 
-// অথবা এখানেই একটি স্কিল লিস্ট রাখতে পারেন।
+import { skills } from "./SkillsSection"; // 📍 Now importing skills too
 
 const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -37,12 +35,9 @@ const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) 
 };
 
 const StatsBar = () => {
-  // 📍 Dynamic calculation logic
-  const projectCount = projects?.length || 3; 
-  
-  // আপনি যদি স্কিল সেকশন থেকে ইমপোর্ট না করেন, তবে এখানে বর্তমান কাউন্ট ১৬ বসিয়ে দিচ্ছি
-  // অথবা সরাসরি স্কিল অ্যারো ইমপোর্ট করলে skills.length ব্যবহার করবেন।
-  const techCount = 16; 
+  // 📍 Full Dynamic Counts
+  const projectCount = projects?.length || 0;
+  const techCount = skills?.length || 0; 
 
   const stats = [
     { value: projectCount, suffix: "+", label: "Projects Completed" },
@@ -67,7 +62,7 @@ const StatsBar = () => {
               <div className="transition-transform duration-300 group-hover:scale-110">
                 <AnimatedNumber target={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
+              <p className="font-mono text-[10px] md:text-xs text-muted-foreground uppercase tracking-widest">
                 {stat.label}
               </p>
             </motion.div>
