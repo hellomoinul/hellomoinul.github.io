@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const skills = [
+  // 📍 Full-Stack & Modern Web (Newly Added from Voboghure)
+  { name: "React", icon: "⚛️" },
+  { name: "TypeScript", icon: "TS" },
+  { name: "Supabase", icon: "⚡" },
+  { name: "PostgreSQL", icon: "🐘" },
+  { name: "RBAC & Auth", icon: "🔐" }, // Roles & Permissions logic
+  { name: "RLS", icon: "🛡️" },         // Row Level Security
+
+  // Existing Core Skills
   { name: "C", icon: "C" },
   { name: "C++", icon: "C++" },
   { name: "Java", icon: "☕" },
@@ -27,7 +36,6 @@ const SkillsSection = () => {
         setTimeout(onHighlight, 600);
       }
     };
-    // Listen for custom event from navbar
     window.addEventListener("highlight-skills", onHighlight);
     window.addEventListener("hashchange", handleNavClick);
     return () => {
@@ -51,14 +59,15 @@ const SkillsSection = () => {
           <div className="w-16 h-px bg-primary/50 mx-auto" />
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+        {/* 📍 Updated grid structure to handle more skills gracefully */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
           {skills.map((skill, i) => (
             <motion.div
               key={skill.name}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.07 }}
+              transition={{ delay: i * 0.05 }}
               className={`glass-card rounded-xl p-6 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 ${
                 highlightAll
                   ? "glow-cyan text-primary scale-105"
@@ -70,7 +79,7 @@ const SkillsSection = () => {
               }`}>
                 {skill.icon}
               </span>
-              <span className="font-mono text-sm text-foreground">{skill.name}</span>
+              <span className="font-mono text-xs md:text-sm text-foreground text-center line-clamp-1">{skill.name}</span>
             </motion.div>
           ))}
         </div>
