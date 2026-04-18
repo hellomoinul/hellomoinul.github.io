@@ -1,33 +1,35 @@
 import { motion } from "framer-motion";
-import { Database, Smartphone, Network } from "lucide-react";
+import { Database, Smartphone, Network, Github, ExternalLink } from "lucide-react";
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
 import cricketImg from "@/assets/project-cricket.jpg";
-// 📍 Updated with your exact filename
 import voboghureImg from "@/assets/voboghure-hero.png.jpeg";
 
 const projects = [
   {
     title: "Voboghure - Multi-Community Ecosystem",
-    description: "Architected and engineered a full-stack SaaS-style platform for multi-community management. Features Role-Based Access Control (RBAC), secure Supabase authentication, real-time database-trigger notifications, and optimized query workflows for scalable infrastructure.",
-    tags: ["React & TypeScript", "Supabase", "Auth", "RBAC", "Real-time", "Full Stack"],
+    description: "Architected and engineered a full-stack SaaS-style platform for multi-community management. Features Role-Based Access Control (RBAC), secure Supabase authentication, and real-time database-trigger notifications.",
+    tags: ["React & TypeScript", "Supabase", "Auth", "RBAC", "Full Stack"],
     icon: Network, 
     liveLink: "https://voboghure.vercel.app/",
+    githubLink: "https://github.com/hellomoinul/voboghure", 
     image: voboghureImg,
   },
   {
     title: "Tax Management System",
-    description: "A robust backend system built with SQL. Features include complex CRUD operations, advanced relational database design, and optimized data querying.",
+    description: "A robust backend system built with SQL. Features include complex CRUD operations, advanced relational database design, and optimized data querying for financial records.",
     tags: ["SQL", "Database Design", "CRUD", "Backend"],
     icon: Database,
+    githubLink: "https://github.com/hellomoinul/Tax-Management-System", // 📍 Integrated
     image: taxImg,
   },
   {
     title: "Fantasy Cricket App",
-    description: "A cross-platform mobile application developed using Flutter and Dart, focusing on a seamless user interface and real-time data handling.",
+    description: "A cross-platform mobile application developed using Flutter and Dart, focusing on a seamless user interface and real-time data handling for sports enthusiasts.",
     tags: ["Flutter", "Dart", "Mobile", "UI/UX"],
     icon: Smartphone,
+    githubLink: "https://github.com/hellomoinul/fantasy_cricket_app", // 📍 Integrated
     image: cricketImg,
   },
 ];
@@ -48,7 +50,6 @@ const ProjectsSection = () => {
           <div className="w-16 h-px bg-primary/50 mx-auto" />
         </motion.div>
 
-        {/* Dynamic grid: 3 columns on large screens for better balance */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[1200px] mx-auto">
           {projects.map((project, i) => (
             <motion.div
@@ -59,11 +60,7 @@ const ProjectsSection = () => {
               transition={{ delay: i * 0.15, duration: 0.5 }}
               className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full"
             >
-              <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300">
-                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.08] via-transparent to-transparent translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-700 ease-in-out" />
-              </div>
-
-              {/* Image Section */}
+              {/* Image Section with Overlay Buttons */}
               <div className="aspect-video overflow-hidden relative">
                 <img
                   src={project.image}
@@ -72,23 +69,33 @@ const ProjectsSection = () => {
                   style={{ filter: "grayscale(10%) contrast(105%)" }}
                 />
                 
-                {/* Overlay with Live Link for Voboghure */}
-                {project.liveLink && (
-                  <div className="absolute inset-0 bg-black/60 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-4">
+                {/* Interaction Overlay: Visible on Hover */}
+                <div className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
+                  {project.liveLink && (
                     <a 
                       href={project.liveLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm transition-all hover:scale-105 active:scale-95 z-30 pointer-events-auto shadow-lg"
+                      className="flex items-center gap-2 w-44 justify-center py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-xs transition-all hover:scale-105"
                     >
-                      Visit Voboghure Live
+                      <ExternalLink size={14} /> Visit Live
                     </a>
-                  </div>
-                )}
+                  )}
+                  {project.githubLink && (
+                    <a 
+                      href={project.githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 w-44 justify-center py-2.5 rounded-full bg-secondary text-secondary-foreground font-semibold text-xs transition-all hover:scale-105 border border-white/10"
+                    >
+                      <Github size={14} /> View Code
+                    </a>
+                  )}
+                </div>
               </div>
 
-              {/* Text Content */}
-              <div className="p-6 space-y-4 flex-grow flex flex-col justify-between bg-card/50">
+              {/* Content Section */}
+              <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
@@ -96,8 +103,7 @@ const ProjectsSection = () => {
                     </div>
                     <h3 className="font-semibold text-lg tracking-tight line-clamp-1">{project.title}</h3>
                   </div>
-
-                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
+                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
                     {project.description}
                   </p>
                 </div>
@@ -106,7 +112,7 @@ const ProjectsSection = () => {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground"
+                      className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-muted text-muted-foreground"
                     >
                       {tag}
                     </span>
