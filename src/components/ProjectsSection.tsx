@@ -19,6 +19,14 @@ export const projects = [
     image: voboghureImg,
   },
   {
+    title: "An Embedded Real-Time Alert System for Academic Integrity Enforcement",
+    description: "Architected an IoT-based system using Arduino Uno and PIR sensors for academic integrity enforcement. Features real-time motion detection and automated visual alert triggers to monitor exam environments.",
+    tags: ["Arduino", "Embedded Systems", "IoT", "PIR Sensors", "Hardware"],
+    icon: Cpu, // 📍 Lucide React আইকন
+    liveLink: "https://www.overleaf.com/read/hhjsqfvznfxt#bc979a",
+    image: "circuit.jpg", // 📍 আপনার দেওয়া ইমেজ লিঙ্ক
+  },
+  {
     title: "Tax Management System",
     description: "A robust backend system built with SQL. Features include complex CRUD operations, advanced relational database design, and optimized data querying for financial records.",
     tags: ["SQL", "Database Design", "CRUD", "Backend"],
