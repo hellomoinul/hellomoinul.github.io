@@ -1,37 +1,35 @@
 import { motion } from "framer-motion";
-import { Database, Smartphone, Network, Github, ExternalLink } from "lucide-react";
+import { Database, Smartphone, Network, Github, ExternalLink, Cpu } from "lucide-react"; // 📍 Added 'Cpu' icon import
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
 import cricketImg from "@/assets/project-cricket.jpg";
 import voboghureImg from "@/assets/voboghure-hero.png.jpeg";
+import circuitImg from "@/assets/circuit.jpg"; // 📍 Fixed image import from your assets path
 
-// 📍 Added 'export' so StatsBar can dynamically count projects
+// 📍 Exported for StatsBar dynamic counting
 export const projects = [
   {
     title: "Voboghure - Multi-Community Ecosystem",
-    // 📍 New description based on your engineering work in Voboghure
     description: "Architected and engineered a full-stack SaaS-style platform for multi-community management. Features Role-Based Access Control (RBAC), secure Supabase authentication, and real-time database-trigger notifications.",
     tags: ["React & TypeScript", "Supabase", "Auth", "RBAC", "Full Stack"],
     icon: Network, 
     liveLink: "https://voboghure.vercel.app/",
-    // 📍 GitHub link removed as it's a private repo per your instruction
     image: voboghureImg,
   },
   {
-    title: "An Embedded Real-Time Alert System for Academic Integrity Enforcement",
+    title: "Embedded Real-Time Alert System", // 📍 Shortened for UI consistency
     description: "Architected an IoT-based system using Arduino Uno and PIR sensors for academic integrity enforcement. Features real-time motion detection and automated visual alert triggers to monitor exam environments.",
     tags: ["Arduino", "Embedded Systems", "IoT", "PIR Sensors", "Hardware"],
-    icon: Cpu, // 📍 Lucide React আইকন
+    icon: Cpu, 
     liveLink: "https://www.overleaf.com/read/hhjsqfvznfxt#bc979a",
-    image: "circuit.jpg", // 📍 আপনার দেওয়া ইমেজ লিঙ্ক
+    image: circuitImg, // 📍 Using the imported variable
   },
   {
     title: "Tax Management System",
     description: "A robust backend system built with SQL. Features include complex CRUD operations, advanced relational database design, and optimized data querying for financial records.",
     tags: ["SQL", "Database Design", "CRUD", "Backend"],
     icon: Database,
-    // 📍 Integrated your GitHub repository link
     githubLink: "https://github.com/hellomoinul/Tax-Management-System",
     image: taxImg,
   },
@@ -40,7 +38,6 @@ export const projects = [
     description: "A cross-platform mobile application developed using Flutter and Dart, focusing on a seamless user interface and real-time data handling for sports enthusiasts.",
     tags: ["Flutter", "Dart", "Mobile", "UI/UX"],
     icon: Smartphone,
-    // 📍 Integrated your GitHub repository link
     githubLink: "https://github.com/hellomoinul/fantasy_cricket_app",
     image: cricketImg,
   },
@@ -62,8 +59,8 @@ const ProjectsSection = () => {
           <div className="w-16 h-px bg-primary/50 mx-auto" />
         </motion.div>
 
-        {/* 📍 Grid layout optimized for 3 projects */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[1200px] mx-auto">
+        {/* 📍 Grid optimized: 2 columns for better focus as you now have 4 projects */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-[1100px] mx-auto">
           {projects.map((project, i) => (
             <motion.div
               key={project.title}
@@ -78,11 +75,9 @@ const ProjectsSection = () => {
                   src={project.image}
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  // 📍 Added cinematic filter for a professional look
                   style={{ filter: "grayscale(10%) contrast(105%)" }}
                 />
                 
-                {/* 📍 Added Hover Overlay with Dynamic Button Logic */}
                 <div className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
                   {project.liveLink && (
                     <a 
@@ -91,7 +86,9 @@ const ProjectsSection = () => {
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 w-44 justify-center py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-xs transition-all hover:scale-105"
                     >
-                      <ExternalLink size={14} /> Visit Live
+                      <ExternalLink size={14} /> 
+                      {/* 📍 Smart text for research papers */}
+                      {project.title.includes("Embedded") ? "View Paper" : "Visit Live"}
                     </a>
                   )}
                   {project.githubLink && (
