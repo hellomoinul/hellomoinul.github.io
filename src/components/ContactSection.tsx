@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 const socialLinks = [
   { label: "Facebook", href: "https://facebook.com/hellomoinul", icon: Facebook },
   { label: "Instagram", href: "https://instagram.com/hellomoinul", icon: Instagram },
-  { label: "YouTube", href: "https://www.youtube.com/hellomoinul", icon: Youtube },
+  { label: "YouTube", href: "https://www.youtube.com/@hellomoinul", icon: Youtube },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/hellomoinul", icon: Linkedin },
   { label: "GitHub", href: "https://github.com/hellomoinul", icon: Github },
   { label: "X", href: "https://x.com/hellomoinul", icon: XIcon },
