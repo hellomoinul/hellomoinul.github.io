@@ -1,60 +1,86 @@
-# Md. Moinul Hasan Akash
+# 🌐 Personal Portfolio — moinulhasan.pro.bd
 
-Md. Moinul Hasan Akash is a Computer Science and Engineering (CSE) student at NITER (University of Dhaka).  
-This GitHub profile represents the work, projects, and technical journey of Md. Moinul Hasan Akash.
+My personal portfolio website — a single-page React app showcasing my projects, skills, timeline, and contact info.
 
-🌐 Portfolio: https://moinulhasan.pro.bd  
-💼 LinkedIn: https://www.linkedin.com/in/hellomoinul  
-💻 GitHub: https://github.com/hellomoinul  
+**Live:** [moinulhasan.pro.bd](https://moinulhasan.pro.bd) · Mirrors: GitHub Pages + Netlify
 
----
-
-## 👨‍💻 About Md. Moinul Hasan Akash
-
-I am Md. Moinul Hasan Akash, a passionate CSE student at NITER (DU), focused on building modern web applications and solving real-world problems through technology.
-
-My work includes developing responsive web applications, automation systems, and user-focused digital solutions. As a CSE student at NITER (University of Dhaka), I continuously explore new technologies and improve my problem-solving skills.
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vite.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
 ---
 
-## 🚀 Tech Stack
+## ✨ Sections
 
-- React.js (Frontend Development)
-- Vite (Build Tool)
-- Tailwind CSS (Styling)
-- Framer Motion (Animations)
-- JavaScript / TypeScript
-- Flutter (Basic)
+One route (`/`), composed of:
 
----
+- Navbar + Hero + Stats bar
+- About, Services, Skills
+- Projects, Timeline, Achievements, Blog
+- Contact + 404 fallback (`NotFound`)
 
-## 🛠️ Projects by Md. Moinul Hasan Akash
-
-This portfolio highlights several projects built by Md. Moinul Hasan Akash, including:
-
-- Automated Cheating Detection System  
-- Management Systems  
-- Modern Web Applications  
-
-👉 Explore all projects here:  
-🌐 https://moinulhasan.pro.bd
+SEO-ready: canonical URL, Open Graph / Twitter cards, JSON-LD person schema, sitemap-friendly static output. Old domains (`mdmoinulhasan.pro.bd`, `moinulhasan.github.io`) redirect to the canonical domain via `index.html` / `404.html` scripts.
 
 ---
 
-## 📌 Why this repository?
+## 🛠️ Tech Stack
 
-This repository represents the personal portfolio of Md. Moinul Hasan Akash and serves as a central place to showcase projects, skills, and achievements as a CSE student at NITER (DU).
-
----
-
-## 🔗 Connect with Md. Moinul Hasan Akash
-
-- Portfolio: https://moinulhasan.pro.bd  
-- LinkedIn: https://www.linkedin.com/in/hellomoinul  
-- GitHub: https://github.com/hellomoinul  
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18 · TypeScript 5 · Vite 5 |
+| UI | Tailwind CSS 3 · shadcn/ui (Radix) · Framer Motion · Lucide Icons |
+| Data/Forms | TanStack Query · React Hook Form + Zod · React Router 6 |
+| Config | GitHub Pages (`CNAME`) + Netlify (`netlify.toml` SPA redirect) |
 
 ---
 
-## 📍 Location
+## ⚡ Getting Started
 
-Savar, Dhaka, Bangladesh
+Prerequisites: Node.js 18+, npm.
+
+```bash
+git clone https://github.com/hellomoinul/hellomoinul.github.io.git
+cd hellomoinul.github.io
+
+npm install
+npm run dev
+```
+
+Open http://localhost:5173.
+
+| Command | Action |
+|---------|--------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build → `dist/` |
+| `npm run lint` | Run ESLint |
+| `npm run preview` | Preview production build |
+
+---
+
+## 🚀 Deployment
+
+- **GitHub Pages:** `CNAME` points to `moinulhasan.pro.bd`; any push to `main` serves `dist/` via Pages.
+- **Netlify:** `netlify.toml` builds with `npm run build`, publishes `dist`, with `/* → /index.html` SPA redirect.
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/   # Navbar, HeroSection, SkillsSection, ProjectsSection, ...
+├── pages/        # Index (home), NotFound
+├── hooks/ lib/  # Helpers & utilities
+├── assets/       # Images & static assets
+index.html        # SEO head, redirects, root mount
+CNAME             # Custom domain (GitHub Pages)
+netlify.toml      # Netlify build + SPA redirects
+404.html          # Domain redirect + SPA fallback
+```
+
+---
+
+## 📄 License
+
+Personal project — all rights reserved.
