@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, Mail, FileDown } from "lucide-react";
 import profileImg from "@/assets/profile-photo.jpg";
-import { useGithubRepos } from "@/hooks/useGithub";
 
 const terminalLines = [
   { prompt: "moinul@niter:~$", command: " locate --specialist" },
@@ -38,8 +37,6 @@ const TypingText = ({ text, delay = 0 }: { text: string; delay?: number }) => {
 };
 
 const HeroSection = () => {
-  const { totalRepos } = useGithubRepos();
-
   return (
     <section
       id="home"
@@ -160,18 +157,6 @@ const HeroSection = () => {
                 Resume
               </a>
             </motion.div>
-
-            {/* Live repo count (shared GitHub cache, no extra request) */}
-            {totalRepos > 0 && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.1 }}
-                className="font-mono text-[11px] text-muted-foreground"
-              >
-                <span>{totalRepos} public repos on GitHub</span>
-              </motion.p>
-            )}
           </motion.div>
 
           {/* Right -- Profile */}

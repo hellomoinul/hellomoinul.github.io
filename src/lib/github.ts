@@ -17,6 +17,8 @@ export const EXCLUDED_REPOS = ["hellomoinul", "hellomoinul.github.io"];
 export const REPO_COVERS: Record<string, string> = {
   "diabetes-risk-prediction":
     "https://raw.githubusercontent.com/hellomoinul/diabetes-risk-prediction/main/Public/Screenshot%202026-10-14%20194554.png",
+  "voboghure-39a07f26":
+    "https://raw.githubusercontent.com/hellomoinul/voboghure-39a07f26/main/public/Screenshot%202026-04-16%20150925.png",
 };
 
 export function getRepoCover(repoName: string): string | undefined {

@@ -1,24 +1,15 @@
 import { motion } from "framer-motion";
-import { Database, Smartphone, Network, Github, ExternalLink, Cpu, Star, GitFork, Code2 } from "lucide-react"; // 📍 Added 'Cpu' icon import
+import { Database, Smartphone, Github, ExternalLink, Cpu, Star, GitFork, Code2 } from "lucide-react"; // 📍 Added 'Cpu' icon import
 import { useGithubRepos } from "@/hooks/useGithub";
 import { getRepoCover } from "@/lib/github";
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
 import cricketImg from "@/assets/project-cricket.jpg";
-import voboghureImg from "@/assets/voboghure-hero.png.jpeg";
 import circuitImg from "@/assets/circuit.jpg"; // 📍 Fixed image import from your assets path
 
 // 📍 Exported for StatsBar dynamic counting
 export const projects = [
-  {
-    title: "Voboghure - Multi-Community Ecosystem",
-    description: "Architected and engineered a full-stack SaaS-style platform for multi-community management. Features Role-Based Access Control (RBAC), secure Supabase authentication, and real-time database-trigger notifications.",
-    tags: ["React & TypeScript", "Supabase", "Auth", "RBAC", "Full Stack"],
-    icon: Network, 
-    liveLink: "https://voboghure.vercel.app/",
-    image: voboghureImg,
-  },
   {
     title: "Embedded Real-Time Alert System", // 📍 Shortened for UI consistency
     description: "Architected an IoT-based system using Arduino Uno and PIR sensors for academic integrity enforcement. Features real-time motion detection and automated visual alert triggers to monitor exam environments.",
@@ -163,7 +154,13 @@ const ProjectsSection = () => {
                   const cover = getRepoCover(repo.name);
                   const displayTags = [
                     ...(repo.language ? [repo.language] : []),
-                    ...repo.topics.filter((t) => t !== "showcase").slice(0, 3),
+                    ...repo.topics
+                      .filter(
+                        (t) =>
+                          t !== "showcase" &&
+                          t.toLowerCase() !== (repo.language || "").toLowerCase()
+                      )
+                      .slice(0, 3),
                   ];
                   return (
                     <motion.div
