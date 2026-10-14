@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import { Database, Smartphone, Network, Github, ExternalLink, Cpu, Star, GitFork } from "lucide-react"; // 📍 Added 'Cpu' icon import
+import { Database, Smartphone, Network, Github, ExternalLink, Cpu, Star, GitFork, Code2 } from "lucide-react"; // 📍 Added 'Cpu' icon import
 import { useGithubRepos } from "@/hooks/useGithub";
-import { SHOWCASE_TOPIC } from "@/lib/github";
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
@@ -45,9 +44,16 @@ export const projects = [
   },
 ];
 
+// Repo names already covered by the curated cards above (lowercase).
+// Live repos matching these are hidden to avoid duplicates.
+export const featuredGithubRepoNames = ["tax-management-system", "fantasy_cricket_app"];
+
 const ProjectsSection = () => {
   const { showcaseRepos, isLoading, isError } = useGithubRepos();
-  const showLive = !isError && (isLoading || showcaseRepos.length > 0);
+  const liveOnly = showcaseRepos.filter(
+    (r) => !featuredGithubRepoNames.includes(r.name.toLowerCase())
+  );
+  const showLive = !isError && (isLoading || liveOnly.length > 0);
 
   return (
     <section id="projects" className="py-24 relative">
@@ -64,7 +70,7 @@ const ProjectsSection = () => {
           <div className="w-16 h-px bg-primary/50 mx-auto" />
         </motion.div>
 
-        {/* 📍 Grid optimized: 2 columns for better focus as you now have 4 projects */}
+        {/* Featured grid: curated cards + GitHub showcase repos in the same style */}
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-[1100px] mx-auto">
           {projects.map((project, i) => (
             <motion.div
@@ -135,77 +141,108 @@ const ProjectsSection = () => {
               </div>
             </motion.div>
           ))}
-        </div>
-
-        {/* 📍 Live from GitHub: repos YOU tag with topic "showcase" appear here automatically */}
-        {showLive && (
-          <div className="max-w-[1100px] mx-auto mt-20">
-            <div className="text-center space-y-2 mb-8">
-              <p className="font-mono text-xs text-primary uppercase tracking-widest flex items-center justify-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                Live from GitHub
-              </p>
-              <h3 className="text-xl font-bold tracking-tight">More work, auto-synced</h3>
-              <p className="font-mono text-[11px] text-muted-foreground">
-                Add topic <span className="text-primary">“{SHOWCASE_TOPIC}”</span> on any repo to feature it here — no code edit.
-              </p>
-            </div>
-
-            {isLoading ? (
-              <div className="grid md:grid-cols-2 gap-6">
-                {[0, 1].map((i) => (
-                  <div key={i} className="glass-card rounded-xl p-6 space-y-3 animate-pulse">
-                    <div className="h-4 bg-muted rounded w-2/3" />
-                    <div className="h-3 bg-muted rounded w-full" />
-                    <div className="h-3 bg-muted rounded w-5/6" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 gap-6">
-                {showcaseRepos.map((repo, i) => (
-                  <motion.div
-                    key={repo.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: (i % 4) * 0.1 }}
-                    className="glass-card rounded-xl p-6 space-y-3 group hover:glow-accent transition-all"
+          {/* Live GitHub repos (topic: showcase) render as native cards in the same grid */}
+          {showLive &&
+            (isLoading
+              ? [0, 1].map((i) => (
+                  <div
+                    key={`skeleton-${i}`}
+                    className="glass-card rounded-xl overflow-hidden flex flex-col h-full animate-pulse"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <h4 className="font-semibold text-sm tracking-tight line-clamp-1">{repo.name}</h4>
-                      <div className="flex items-center gap-3 font-mono text-[11px] text-muted-foreground shrink-0">
-                        <span className="flex items-center gap-1"><Star size={12} />{repo.stargazers_count}</span>
-                        <span className="flex items-center gap-1"><GitFork size={12} />{repo.forks_count}</span>
+                    <div className="aspect-video bg-muted/40" />
+                    <div className="p-6 space-y-3">
+                      <div className="h-4 bg-muted rounded w-2/3" />
+                      <div className="h-3 bg-muted rounded w-full" />
+                      <div className="h-3 bg-muted rounded w-5/6" />
+                    </div>
+                  </div>
+                ))
+              : liveOnly.map((repo, j) => {
+                  const idx = projects.length + j;
+                  const displayTags = [
+                    ...(repo.language ? [repo.language] : []),
+                    ...repo.topics.filter((t) => t !== "showcase").slice(0, 3),
+                  ];
+                  return (
+                    <motion.div
+                      key={repo.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: (idx % 4) * 0.15, duration: 0.5 }}
+                      className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full"
+                    >
+                      <div className="aspect-video overflow-hidden relative bg-gradient-to-br from-primary/20 via-muted to-card flex items-center justify-center">
+                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <Code2 size={22} className="text-primary" />
+                          </div>
+                          <span className="font-mono text-[11px] uppercase tracking-widest">
+                            {repo.language || "GitHub"}
+                          </span>
+                        </div>
+                        <div className="absolute top-3 right-3 flex items-center gap-2 font-mono text-[11px] text-muted-foreground bg-black/50 rounded-full px-2.5 py-1">
+                          <span className="flex items-center gap-1">
+                            <Star size={12} />
+                            {repo.stargazers_count}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <GitFork size={12} />
+                            {repo.forks_count}
+                          </span>
+                        </div>
+                        <div className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
+                          <a
+                            href={repo.html_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 w-44 justify-center py-2.5 rounded-full bg-secondary text-secondary-foreground font-semibold text-xs transition-all hover:scale-105 border border-white/10"
+                          >
+                            <Github size={14} /> View Code
+                          </a>
+                          {repo.homepage && (
+                            <a
+                              href={repo.homepage}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 w-44 justify-center py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-xs transition-all hover:scale-105"
+                            >
+                              <ExternalLink size={14} /> Visit Live
+                            </a>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
-                      {repo.description || "No description yet — add one on GitHub to show it here."}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {repo.language && (
-                        <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary">{repo.language}</span>
-                      )}
-                      {repo.topics.slice(0, 3).map((t) => (
-                        <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground">{t}</span>
-                      ))}
-                    </div>
-                    <div className="flex gap-3 pt-1">
-                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-mono text-xs flex items-center gap-1.5 hover:text-primary transition-colors">
-                        <Github size={13} /> Code
-                      </a>
-                      {repo.homepage && (
-                        <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className="font-mono text-xs flex items-center gap-1.5 hover:text-primary transition-colors">
-                          <ExternalLink size={13} /> Live
-                        </a>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+
+                      <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
+                              <Code2 size={16} className="text-primary" />
+                            </div>
+                            <h3 className="font-semibold text-lg tracking-tight line-clamp-1">
+                              {repo.name.replace(/-/g, " ")}
+                            </h3>
+                          </div>
+                          <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
+                            {repo.description || "GitHub repository — open View Code for details."}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 pt-2">
+                          {displayTags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="font-mono text-[10px] uppercase px-2.5 py-1 rounded-md bg-muted text-muted-foreground"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                }))}
+        </div>
       </div>
     </section>
   );
