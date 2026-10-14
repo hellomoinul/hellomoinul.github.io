@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Database, Smartphone, Github, ExternalLink, Cpu, Star, GitFork, Code2 } from "lucide-react"; // 📍 Added 'Cpu' icon import
 import { useGithubRepos } from "@/hooks/useGithub";
 import { getRepoCover } from "@/lib/github";
+import ProjectModal, { type ProjectDetail } from "./ProjectModal";
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
@@ -42,6 +44,7 @@ export const featuredGithubRepoNames = ["tax-management-system", "fantasy_cricke
 
 const ProjectsSection = () => {
   const { showcaseRepos, isLoading, isError } = useGithubRepos();
+  const [selected, setSelected] = useState<ProjectDetail | null>(null);
   const liveOnly = showcaseRepos.filter(
     (r) => !featuredGithubRepoNames.includes(r.name.toLowerCase())
   );
@@ -71,7 +74,17 @@ const ProjectsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.5 }}
-              className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full"
+              onClick={() =>
+                setSelected({
+                  title: project.title,
+                  description: project.description,
+                  tags: project.tags,
+                  image: project.image,
+                  liveLink: project.liveLink,
+                  githubLink: project.githubLink,
+                })
+              }
+              className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full cursor-pointer"
             >
               <div className="aspect-video overflow-hidden relative">
                 <img
@@ -81,7 +94,7 @@ const ProjectsSection = () => {
                   style={{ filter: "grayscale(10%) contrast(105%)" }}
                 />
                 
-                <div className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
+                <div onClick={(e) => e.stopPropagation()} className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
                   {project.liveLink && (
                     <a 
                       href={project.liveLink}
@@ -130,6 +143,9 @@ const ProjectsSection = () => {
                     </span>
                   ))}
                 </div>
+                <p className="font-mono text-[11px] text-primary/70 group-hover:text-primary transition-colors pt-1">
+                  View Details →
+                </p>
               </div>
             </motion.div>
           ))}
@@ -169,7 +185,22 @@ const ProjectsSection = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: (idx % 4) * 0.15, duration: 0.5 }}
-                      className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full"
+                      onClick={() =>
+                        setSelected({
+                          title: repo.name.replace(/-/g, " "),
+                          description:
+                            repo.description || "GitHub repository — open View Code for details.",
+                          tags: displayTags,
+                          image: cover,
+                          githubLink: repo.html_url,
+                          liveLink: repo.homepage || undefined,
+                          language: repo.language,
+                          stars: repo.stargazers_count,
+                          forks: repo.forks_count,
+                          updatedAt: repo.pushed_at,
+                        })
+                      }
+                      className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full cursor-pointer"
                     >
                       <div className="aspect-video overflow-hidden relative bg-gradient-to-br from-primary/20 via-muted to-card flex items-center justify-center">
                         {cover ? (
@@ -200,7 +231,7 @@ const ProjectsSection = () => {
                             {repo.forks_count}
                           </span>
                         </div>
-                        <div className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
+                        <div className="absolute inset-0 bg-black/70 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4" onClick={(e) => e.stopPropagation()}>
                           <a
                             href={repo.html_url}
                             target="_blank"
@@ -247,11 +278,15 @@ const ProjectsSection = () => {
                             </span>
                           ))}
                         </div>
+                        <p className="font-mono text-[11px] text-primary/70 group-hover:text-primary transition-colors pt-1">
+                          View Details →
+                        </p>
                       </div>
                     </motion.div>
                   );
                 }))}
         </div>
+        <ProjectModal detail={selected} onClose={() => setSelected(null)} />
       </div>
     </section>
   );

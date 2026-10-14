@@ -1,5 +1,14 @@
 export const GITHUB_USERNAME = "hellomoinul";
 
+// Account creation date (api.github.com/users/hellomoinul → created_at).
+// Used for the Years Learning counter — ticks up automatically, no API call.
+export const GITHUB_ACCOUNT_CREATED = "2023-12-31T04:32:39Z";
+
+export function yearsSince(isoDate: string, now = new Date()): number {
+  const msPerYear = 365.25 * 24 * 60 * 60 * 1000;
+  return Math.max(0, Math.floor((now.getTime() - new Date(isoDate).getTime()) / msPerYear));
+}
+
 // The topic tag YOU add on github.com repo > About > Topics.
 // Only repos with this topic (plus ALWAYS_SHOW) appear as portfolio projects.
 export const SHOWCASE_TOPIC = "showcase";

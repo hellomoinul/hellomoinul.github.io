@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react";
 import { projects, featuredGithubRepoNames } from "./ProjectsSection"; 
 import { skills } from "./SkillsSection"; // 📍 Now importing skills too
 import { useGithubRepos } from "@/hooks/useGithub";
+import { GITHUB_ACCOUNT_CREATED, yearsSince } from "@/lib/github";
 
 const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -48,7 +49,7 @@ const StatsBar = () => {
   const stats = [
     { value: projectCount, suffix: "+", label: "Projects Completed" },
     { value: techCount, suffix: "+", label: "Technologies" },
-    { value: 2, suffix: "+", label: "Years Learning" },
+    { value: yearsSince(GITHUB_ACCOUNT_CREATED), suffix: "+", label: "Years Learning" },
     { value: 100, suffix: "%", label: "Commitment" },
   ];
 
