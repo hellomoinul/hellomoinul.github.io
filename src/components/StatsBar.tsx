@@ -1,9 +1,10 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 
-// 📍 Importing data from your sections
+// 📍 Importing data from your sections (fallback when offline / rate-limited)
 import { projects } from "./ProjectsSection"; 
 import { skills } from "./SkillsSection"; // 📍 Now importing skills too
+import { useGithubRepos, useGithubUser } from "@/hooks/useGithub";
 
 const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -35,16 +36,26 @@ const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) 
 };
 
 const StatsBar = () => {
-  // 📍 Full Dynamic Counts
-  const projectCount = projects?.length || 0;
-  const techCount = skills?.length || 0; 
+  // 📍 Live GitHub numbers, fallback to static when API fails
+  const { data: user } = useGithubUser();
+  const { showcaseCount, totalStars, totalRepos } = useGithubRepos();
+
+  const projectCount = showcaseCount > 0 ? showcaseCount : projects?.length || 0;
+  const techCount = skills?.length || 0;
+  const followerCount = user?.followers ?? 0;
+  const starCount = totalStars;
 
   const stats = [
-    { value: projectCount, suffix: "+", label: "Projects Completed" },
+    { value: projectCount, suffix: "+", label: "Showcase Projects" },
     { value: techCount, suffix: "+", label: "Technologies" },
-    { value: 2, suffix: "+", label: "Years Learning" },
-    { value: 100, suffix: "%", label: "Commitment" },
+    // Live values replace the old hardcoded "2+ Years" / "100% Commitment":
+    // followers + stars prove real activity better than a static claim.
+    { value: followerCount, suffix: "", label: "GitHub Followers" },
+    { value: starCount, suffix: "", label: "Stars Earned" },
   ];
+
+  // Keep total repo count available for screen readers / future use
+  void totalRepos;
 
   return (
     <section className="py-16 relative border-y border-border/30 bg-card/10 backdrop-blur-sm">

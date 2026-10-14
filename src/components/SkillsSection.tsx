@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useGithubRepos } from "@/hooks/useGithub";
 
 // 📍 Added 'export' so StatsBar can dynamically count your total technologies
 export const skills = [
@@ -26,6 +27,7 @@ export const skills = [
 
 const SkillsSection = () => {
   const [highlightAll, setHighlightAll] = useState(false);
+  const { topLanguages } = useGithubRepos();
 
   useEffect(() => {
     const onHighlight = () => {
@@ -91,12 +93,24 @@ const SkillsSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="mt-12 flex justify-center"
+          className="mt-12 flex flex-col items-center gap-4"
         >
           <div className="glass-card rounded-full px-6 py-3 font-mono text-sm flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             Technical Consulting — <span className="text-primary">Core Service</span>
           </div>
+
+          {/* 📍 Live from GitHub: most-used languages across your public repos */}
+          {topLanguages.length > 0 && (
+            <div className="font-mono text-[11px] text-muted-foreground flex flex-wrap items-center justify-center gap-2 max-w-2xl">
+              <span className="uppercase tracking-widest">Live:</span>
+              {topLanguages.map((l) => (
+                <span key={l.name} className="px-2.5 py-1 rounded-full bg-muted/60 border border-border/50">
+                  {l.name} ×{l.count}
+                </span>
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>

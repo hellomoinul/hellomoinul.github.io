@@ -1,28 +1,45 @@
 import { motion } from "framer-motion";
 import { PenLine, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { blogPosts, DEVTO_USERNAME } from "@/data/portfolio";
 
-const posts = [
-  {
-    title: "Why I Chose SQL for My First Backend Project",
-    excerpt: "Exploring the fundamentals of relational databases and how building a Tax Management System taught me structured thinking.",
-    date: "Coming Soon",
-    tags: ["SQL", "Backend"],
-  },
-  {
-    title: "Getting Started with Flutter as a CS Student",
-    excerpt: "My journey into cross-platform mobile development and lessons learned building the Fantasy Cricket App.",
-    date: "Coming Soon",
-    tags: ["Flutter", "Mobile"],
-  },
-  {
-    title: "The Art of Technical Consulting",
-    excerpt: "How a structured approach to problem-solving can elevate any engineering project from concept to delivery.",
-    date: "Coming Soon",
-    tags: ["Consulting", "Career"],
-  },
-];
+interface DevtoArticle {
+  id: number;
+  title: string;
+  description: string;
+  published_at: string;
+  url: string;
+  tag_list: string[];
+}
+
+const fetchDevto = async (username: string): Promise<DevtoArticle[]> => {
+  const res = await fetch(`https://dev.to/api/articles?username=${username}&per_page=3`);
+  if (!res.ok) throw new Error("dev.to failed");
+  return res.json();
+};
 
 const BlogSection = () => {
+  // 📍 Live blog: set DEVTO_USERNAME in src/data/portfolio.ts to auto-pull your latest 3 articles.
+  // Falls back to curated blogPosts when empty/offline.
+  const { data: live } = useQuery({
+    queryKey: ["devto", DEVTO_USERNAME],
+    queryFn: () => fetchDevto(DEVTO_USERNAME),
+    enabled: DEVTO_USERNAME.length > 0,
+    staleTime: 1000 * 60 * 60,
+    retry: 1,
+  });
+
+  const posts =
+    live && live.length > 0
+      ? live.map((a) => ({
+          title: a.title,
+          excerpt: a.description,
+          date: new Date(a.published_at).toLocaleDateString(),
+          tags: a.tag_list.slice(0, 2),
+          url: a.url,
+        }))
+      : blogPosts.map((p) => ({ ...p, url: undefined as string | undefined }));
+
   return (
     <section id="blog" className="py-24 relative">
       <div className="container mx-auto px-6">
@@ -40,15 +57,16 @@ const BlogSection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {posts.map((post, i) => (
-            <motion.article
-              key={post.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass-card rounded-xl p-6 space-y-4 group hover:glow-accent transition-all duration-200 flex flex-col"
-            >
+          {posts.map((post, i) => {
+            const Card = (
+              <motion.article
+                key={post.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="glass-card rounded-xl p-6 space-y-4 group hover:glow-accent transition-all duration-200 flex flex-col h-full"
+              >
               <div className="flex items-center justify-between">
                 <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
                   <PenLine size={14} className="text-primary" />
@@ -67,8 +85,16 @@ const BlogSection = () => {
                 </div>
                 <ArrowRight size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />
               </div>
-            </motion.article>
-          ))}
+              </motion.article>
+            );
+            return post.url ? (
+              <a key={post.title} href={post.url} target="_blank" rel="noopener noreferrer" className="block h-full">
+                {Card}
+              </a>
+            ) : (
+              <div key={post.title} className="h-full">{Card}</div>
+            );
+          })}
         </div>
       </div>
     </section>
