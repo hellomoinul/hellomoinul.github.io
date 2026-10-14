@@ -17,6 +17,7 @@ export interface ProjectDetail {
   stars?: number;
   forks?: number;
   updatedAt?: string;
+  highlights?: string[];
 }
 
 const Meta = ({ detail }: { detail: ProjectDetail }) => {
@@ -89,6 +90,25 @@ const ProjectModal = ({
             <p className="text-muted-foreground text-sm leading-relaxed">
               {detail.description}
             </p>
+
+            {detail.highlights && detail.highlights.length > 0 && (
+              <div className="space-y-2">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-primary">
+                  Highlights
+                </p>
+                <ul className="space-y-1.5">
+                  {detail.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="text-muted-foreground text-sm leading-relaxed flex gap-2"
+                    >
+                      <span className="text-primary mt-0.5">▸</span>
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-2">
               {detail.tags.map((tag) => (

@@ -1,17 +1,29 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Database, Smartphone, Github, ExternalLink, Cpu, Star, GitFork, Code2 } from "lucide-react"; // 📍 Added 'Cpu' icon import
+import { Database, Smartphone, Github, ExternalLink, Cpu, Star, GitFork, Code2, type LucideIcon } from "lucide-react"; // 📍 Added 'Cpu' icon import
 import { useGithubRepos } from "@/hooks/useGithub";
 import { getRepoCover } from "@/lib/github";
 import ProjectModal, { type ProjectDetail } from "./ProjectModal";
+import { getHighlights } from "@/data/projectHighlights";
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
 import cricketImg from "@/assets/project-cricket.jpg";
 import circuitImg from "@/assets/circuit.jpg"; // 📍 Fixed image import from your assets path
 
+interface FeaturedProject {
+  title: string;
+  description: string;
+  tags: string[];
+  icon: LucideIcon;
+  liveLink?: string;
+  githubLink?: string;
+  image: string;
+  noModal?: boolean;
+}
+
 // 📍 Exported for StatsBar dynamic counting
-export const projects = [
+export const projects: FeaturedProject[] = [
   {
     title: "Embedded Real-Time Alert System", // 📍 Shortened for UI consistency
     description: "Architected an IoT-based system using Arduino Uno and PIR sensors for academic integrity enforcement. Features real-time motion detection and automated visual alert triggers to monitor exam environments.",
@@ -19,6 +31,7 @@ export const projects = [
     icon: Cpu, 
     liveLink: "https://www.overleaf.com/read/hhjsqfvznfxt#bc979a",
     image: circuitImg, // 📍 Using the imported variable
+    noModal: true, // Paper link on hover is enough — no detail modal for this one
   },
   {
     title: "Tax Management System",
@@ -74,17 +87,23 @@ const ProjectsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.5 }}
-              onClick={() =>
-                setSelected({
-                  title: project.title,
-                  description: project.description,
-                  tags: project.tags,
-                  image: project.image,
-                  liveLink: project.liveLink,
-                  githubLink: project.githubLink,
-                })
+              onClick={
+                project.noModal
+                  ? undefined
+                  : () =>
+                      setSelected({
+                        title: project.title,
+                        description: project.description,
+                        tags: project.tags,
+                        image: project.image,
+                        liveLink: project.liveLink,
+                        githubLink: project.githubLink,
+                        highlights: getHighlights(project.githubLink?.split("/").pop()),
+                      })
               }
-              className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full cursor-pointer"
+              className={`glass-card rounded-xl overflow-hidden group relative flex flex-col h-full ${
+                project.noModal ? "" : "cursor-pointer"
+              }`}
             >
               <div className="aspect-video overflow-hidden relative">
                 <img
@@ -144,7 +163,7 @@ const ProjectsSection = () => {
                   ))}
                 </div>
                 <p className="font-mono text-[11px] text-primary/70 group-hover:text-primary transition-colors pt-1">
-                  View Details →
+                  {project.noModal ? "Hover for paper link" : "View Details →"}
                 </p>
               </div>
             </motion.div>
@@ -198,6 +217,7 @@ const ProjectsSection = () => {
                           stars: repo.stargazers_count,
                           forks: repo.forks_count,
                           updatedAt: repo.pushed_at,
+                          highlights: getHighlights(repo.name),
                         })
                       }
                       className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full cursor-pointer"
