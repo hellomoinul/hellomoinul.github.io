@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useGithubRepos } from "@/hooks/useGithub";
+import { useProfileSkills } from "@/hooks/useGithub";
+import { skillIconUrl, skillName } from "@/lib/github";
 
-// 📍 Added 'export' so StatsBar can dynamically count your total technologies
+// Kept for StatsBar's Technologies count — the visible grid below is
+// driven by useProfileSkills() (synced with the GitHub profile README).
 export const skills = [
-  // 📍 Full-Stack & Modern Web (Directly showcasing skills used in Voboghure)
   { name: "React", icon: "⚛️" },
   { name: "TypeScript", icon: "TS" },
   { name: "Supabase", icon: "⚡" },
   { name: "PostgreSQL", icon: "🐘" },
-  { name: "RBAC & Auth", icon: "🔐" }, // Roles & Permissions logic identified from your project
-  { name: "RLS", icon: "🛡️" },         // Row Level Security expertise
-
-  // Existing Core Skills
+  { name: "RBAC & Auth", icon: "🔐" },
+  { name: "RLS", icon: "🛡️" },
   { name: "C", icon: "C" },
   { name: "C++", icon: "C++" },
   { name: "Java", icon: "☕" },
@@ -25,9 +24,32 @@ export const skills = [
   { name: "AI", icon: "🤖" },
 ];
 
+// Mirrors the Frameworks & Tools shields on the GitHub profile README.
+// Rarely changes — update both places together when it does.
+const FRAMEWORK_CODES = ["react", "flutter", "tailwind", "supabase", "postgres", "mysql", "git", "vercel", "vscode"];
+
+const SkillPill = ({ code, index }: { code: string; index: number }) => (
+  <motion.span
+    key={code}
+    initial={{ opacity: 0, scale: 0.9 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.04 }}
+    className="glass-card rounded-full pl-2 pr-4 py-1.5 flex items-center gap-2 group cursor-default hover:glow-cyan transition-all duration-200"
+  >
+    <img
+      src={skillIconUrl(code)}
+      alt={skillName(code)}
+      loading="lazy"
+      className="w-5 h-5"
+    />
+    <span className="font-mono text-xs text-foreground">{skillName(code)}</span>
+  </motion.span>
+);
+
 const SkillsSection = () => {
   const [highlightAll, setHighlightAll] = useState(false);
-  const { topLanguages } = useGithubRepos();
+  const { skillCodes, isLive } = useProfileSkills();
 
   useEffect(() => {
     const onHighlight = () => {
@@ -54,7 +76,7 @@ const SkillsSection = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center space-y-4 mb-16"
+          className="text-center space-y-4 mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">
             Tech <span className="text-gradient">Stack</span>
@@ -62,56 +84,43 @@ const SkillsSection = () => {
           <div className="w-16 h-px bg-primary/50 mx-auto" />
         </motion.div>
 
-        {/* 📍 Responsive Grid: Updated to 5 columns on large screens to accommodate new skills */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
-          {skills.map((skill, i) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className={`glass-card rounded-xl p-6 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 ${
-                highlightAll
-                  ? "glow-cyan text-primary scale-105"
-                  : "hover:glow-cyan"
-              }`}
-            >
-              <span className={`text-3xl font-mono font-bold transition-colors duration-300 ${
-                highlightAll ? "text-primary" : "text-muted-foreground group-hover:text-primary"
-              }`}>
-                {skill.icon}
-              </span>
-              <span className="font-mono text-xs md:text-sm text-foreground text-center line-clamp-1">{skill.name}</span>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* 📍 Professional Identity: Reinforcing your role as a Technical Consultant */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="mt-12 flex flex-col items-center gap-4"
+        <div
+          className={`max-w-3xl mx-auto space-y-8 transition-all duration-300 ${
+            highlightAll ? "scale-[1.01]" : ""
+          }`}
         >
-          <div className="glass-card rounded-full px-6 py-3 font-mono text-sm flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            Technical Consulting — <span className="text-primary">Core Service</span>
-          </div>
-
-          {/* 📍 Live from GitHub: most-used languages across your public repos */}
-          {topLanguages.length > 0 && (
-            <div className="font-mono text-[11px] text-muted-foreground flex flex-wrap items-center justify-center gap-2 max-w-2xl">
-              <span className="uppercase tracking-widest">Live:</span>
-              {topLanguages.map((l) => (
-                <span key={l.name} className="px-2.5 py-1 rounded-full bg-muted/60 border border-border/50">
-                  {l.name} ×{l.count}
-                </span>
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground text-center mb-4">
+              Languages{" "}
+              <span className="text-primary normal-case">
+                · {isLive ? "synced with GitHub profile" : "offline snapshot"}
+              </span>
+            </p>
+            <div className="flex flex-wrap justify-center gap-2.5">
+              {skillCodes.map((code, i) => (
+                <SkillPill key={code} code={code} index={i} />
               ))}
             </div>
-          )}
-        </motion.div>
+          </div>
+
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground text-center mb-4">
+              Frameworks & Tools
+            </p>
+            <div className="flex flex-wrap justify-center gap-2.5">
+              {FRAMEWORK_CODES.map((code, i) => (
+                <SkillPill key={code} code={code} index={i} />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-center pt-2">
+            <div className="glass-card rounded-full px-6 py-3 font-mono text-sm flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              Technical Consulting — <span className="text-primary">Core Service</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

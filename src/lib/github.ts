@@ -19,6 +19,8 @@ export const REPO_COVERS: Record<string, string> = {
     "https://raw.githubusercontent.com/hellomoinul/diabetes-risk-prediction/main/Public/Screenshot%202026-10-14%20194554.png",
   "voboghure-39a07f26":
     "https://raw.githubusercontent.com/hellomoinul/voboghure-39a07f26/main/public/Screenshot%202026-04-16%20150925.png",
+  "niterclearanceportal":
+    "https://raw.githubusercontent.com/hellomoinul/niterclearanceportal/main/public/Screenshot%202026-10-14%20194129.png",
 };
 
 export function getRepoCover(repoName: string): string | undefined {
@@ -104,4 +106,64 @@ export function getTopLanguages(repos: GithubRepo[], limit = 6): { name: string;
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
+}
+
+// ---------------------------------------------------------------------------
+// Profile README skills sync.
+// Single source of truth: the LANGS block in hellomoinul/hellomoinul README,
+// refreshed daily by its sync-dynamic Action (top languages across owned repos).
+// The portfolio parses the same skillicons list, so both stay in sync with
+// zero manual edits. Falls back to DEFAULT_SKILL_CODES when offline.
+// ---------------------------------------------------------------------------
+
+export const PROFILE_README_URL = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_USERNAME}/main/README.md`;
+
+export const DEFAULT_SKILL_CODES = ["ts", "py", "c", "css", "js", "dart", "html"];
+
+export const SKILL_NAMES: Record<string, string> = {
+  ts: "TypeScript",
+  js: "JavaScript",
+  py: "Python",
+  c: "C",
+  cpp: "C++",
+  java: "Java",
+  dart: "Dart",
+  html: "HTML",
+  css: "CSS",
+  matlab: "MATLAB",
+  react: "React",
+  flutter: "Flutter",
+  tailwind: "Tailwind CSS",
+  supabase: "Supabase",
+  postgres: "PostgreSQL",
+  mysql: "MySQL",
+  git: "Git",
+  vercel: "Vercel",
+  vscode: "VS Code",
+  vite: "Vite",
+};
+
+export function skillName(code: string): string {
+  return SKILL_NAMES[code.toLowerCase()] ?? code.toUpperCase();
+}
+
+export function skillIconUrl(code: string): string {
+  return `https://skillicons.dev/icons?i=${code.toLowerCase()}&theme=dark`;
+}
+
+/** Extract skillicons codes from the <!-- LANGS:START --> block of a README. */
+export function parseSkillCodesFromReadme(md: string): string[] {
+  const block = md.match(/<!--\s*LANGS:START\s*-->([\s\S]*?)<!--\s*LANGS:END\s*-->/);
+  if (!block) return [];
+  const url = block[1].match(/skillicons\.dev\/icons\?i=([a-z0-9_,+-]+)/i);
+  if (!url) return [];
+  return url[1].split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
+}
+
+export async function fetchProfileSkillCodes(): Promise<string[]> {
+  const res = await fetch(PROFILE_README_URL);
+  if (!res.ok) throw new Error(`Profile README ${res.status}`);
+  const codes = parseSkillCodesFromReadme(await res.text());
+  if (codes.length === 0) throw new Error("No LANGS block found");
+  return codes;
 }
