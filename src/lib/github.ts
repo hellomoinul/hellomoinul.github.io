@@ -11,6 +11,18 @@ export const ALWAYS_SHOW = ["Tax-Management-System", "fantasy_cricket_app"];
 // Never show these, even if tagged.
 export const EXCLUDED_REPOS = ["hellomoinul", "hellomoinul.github.io"];
 
+// Cover screenshots stored inside the project repos themselves (raw URLs).
+// Add an entry here when you upload a screenshot to a repo — the
+// Featured Projects card will use it instead of the gradient fallback.
+export const REPO_COVERS: Record<string, string> = {
+  "diabetes-risk-prediction":
+    "https://raw.githubusercontent.com/hellomoinul/diabetes-risk-prediction/main/Public/Screenshot%202026-10-14%20194554.png",
+};
+
+export function getRepoCover(repoName: string): string | undefined {
+  return REPO_COVERS[repoName];
+}
+
 export interface GithubRepo {
   id: number;
   name: string;

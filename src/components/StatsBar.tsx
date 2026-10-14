@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 // 📍 Importing data from your sections (fallback when offline / rate-limited)
 import { projects, featuredGithubRepoNames } from "./ProjectsSection"; 
 import { skills } from "./SkillsSection"; // 📍 Now importing skills too
-import { useGithubRepos, useGithubUser } from "@/hooks/useGithub";
+import { useGithubRepos } from "@/hooks/useGithub";
 
 const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) => {
   const [count, setCount] = useState(0);
@@ -36,29 +36,21 @@ const AnimatedNumber = ({ target, suffix }: { target: number; suffix: string }) 
 };
 
 const StatsBar = () => {
-  // 📍 Live GitHub numbers, fallback to static when API fails
-  const { data: user } = useGithubUser();
-  const { showcaseRepos, totalStars, totalRepos } = useGithubRepos();
+  // Live project count (curated + tagged repos), other stats stay as they were
+  const { showcaseRepos } = useGithubRepos();
 
   // Same grid the visitor sees: curated 4 + tagged repos minus duplicates
   const liveUnique =
     showcaseRepos?.filter((r) => !featuredGithubRepoNames.includes(r.name.toLowerCase())).length ?? 0;
   const projectCount = (projects?.length || 0) + liveUnique;
   const techCount = skills?.length || 0;
-  const followerCount = user?.followers ?? 0;
-  const starCount = totalStars;
 
   const stats = [
     { value: projectCount, suffix: "+", label: "Projects Completed" },
     { value: techCount, suffix: "+", label: "Technologies" },
-    // Live values replace the old hardcoded "2+ Years" / "100% Commitment":
-    // followers + stars prove real activity better than a static claim.
-    { value: followerCount, suffix: "", label: "GitHub Followers" },
-    { value: starCount, suffix: "", label: "Stars Earned" },
+    { value: 2, suffix: "+", label: "Years Learning" },
+    { value: 100, suffix: "%", label: "Commitment" },
   ];
-
-  // Keep total repo count available for screen readers / future use
-  void totalRepos;
 
   return (
     <section className="py-16 relative border-y border-border/30 bg-card/10 backdrop-blur-sm">

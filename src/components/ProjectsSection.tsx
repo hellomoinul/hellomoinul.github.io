@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Database, Smartphone, Network, Github, ExternalLink, Cpu, Star, GitFork, Code2 } from "lucide-react"; // 📍 Added 'Cpu' icon import
 import { useGithubRepos } from "@/hooks/useGithub";
+import { getRepoCover } from "@/lib/github";
 
 // Asset Imports
 import taxImg from "@/assets/project-tax.jpg";
@@ -159,6 +160,7 @@ const ProjectsSection = () => {
                 ))
               : liveOnly.map((repo, j) => {
                   const idx = projects.length + j;
+                  const cover = getRepoCover(repo.name);
                   const displayTags = [
                     ...(repo.language ? [repo.language] : []),
                     ...repo.topics.filter((t) => t !== "showcase").slice(0, 3),
@@ -173,14 +175,24 @@ const ProjectsSection = () => {
                       className="glass-card rounded-xl overflow-hidden group relative flex flex-col h-full"
                     >
                       <div className="aspect-video overflow-hidden relative bg-gradient-to-br from-primary/20 via-muted to-card flex items-center justify-center">
-                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <Code2 size={22} className="text-primary" />
+                        {cover ? (
+                          <img
+                            src={cover}
+                            alt={repo.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            style={{ filter: "grayscale(10%) contrast(105%)" }}
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                              <Code2 size={22} className="text-primary" />
+                            </div>
+                            <span className="font-mono text-[11px] uppercase tracking-widest">
+                              {repo.language || "GitHub"}
+                            </span>
                           </div>
-                          <span className="font-mono text-[11px] uppercase tracking-widest">
-                            {repo.language || "GitHub"}
-                          </span>
-                        </div>
+                        )}
                         <div className="absolute top-3 right-3 flex items-center gap-2 font-mono text-[11px] text-muted-foreground bg-black/50 rounded-full px-2.5 py-1">
                           <span className="flex items-center gap-1">
                             <Star size={12} />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, Mail, FileDown } from "lucide-react";
 import profileImg from "@/assets/profile-photo.jpg";
-import { useGithubUser, useGithubRepos } from "@/hooks/useGithub";
+import { useGithubRepos } from "@/hooks/useGithub";
 
 const terminalLines = [
   { prompt: "moinul@niter:~$", command: " locate --specialist" },
@@ -38,7 +38,6 @@ const TypingText = ({ text, delay = 0 }: { text: string; delay?: number }) => {
 };
 
 const HeroSection = () => {
-  const { data: ghUser } = useGithubUser();
   const { totalRepos } = useGithubRepos();
 
   return (
@@ -162,17 +161,15 @@ const HeroSection = () => {
               </a>
             </motion.div>
 
-            {/* 📍 Live GitHub proof — updates without redeploy */}
-            {(ghUser || totalRepos > 0) && (
+            {/* Live repo count (shared GitHub cache, no extra request) */}
+            {totalRepos > 0 && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.1 }}
                 className="font-mono text-[11px] text-muted-foreground"
               >
-                {totalRepos > 0 && <span>{totalRepos} public repos</span>}
-                {ghUser && totalRepos > 0 && <span> · </span>}
-                {ghUser && <span>{ghUser.followers} followers on GitHub</span>}
+                <span>{totalRepos} public repos on GitHub</span>
               </motion.p>
             )}
           </motion.div>
